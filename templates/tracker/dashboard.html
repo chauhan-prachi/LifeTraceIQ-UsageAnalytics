@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LifeTraceIQ Dashboard</title>
+<style>
+:root{font-family:Inter,Segoe UI,Arial,sans-serif;color:#e9eef8;background:#0b1020}
+*{box-sizing:border-box}body{margin:0;padding:32px}.wrap{max-width:1100px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}
+h1{margin:0;font-size:30px} .muted{color:#9ba8bd}.badge{padding:8px 12px;border:1px solid #27334c;border-radius:20px;color:#9ba8bd}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:#141c30;border:1px solid #26324b;border-radius:16px;padding:22px}
+.label{color:#9ba8bd;font-size:14px}.value{font-size:30px;font-weight:700;margin-top:10px}
+section{margin-top:18px}.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+h2{font-size:18px;margin:0 0 18px}.row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #27334c}
+.bar{height:8px;background:#26334c;border-radius:20px;margin-top:7px;overflow:hidden}.fill{height:100%;background:#71a7ff}
+.note{line-height:1.6;color:#b5c0d2;font-size:14px}
+@media(max-width:700px){body{padding:18px}.grid,.two{grid-template-columns:1fr}header{align-items:flex-start;gap:12px;flex-direction:column}}
+</style>
+</head>
+<body><main class="wrap">
+<header><div><h1>LifeTraceIQ</h1><div class="muted">Understand your digital habits. Reclaim your time.</div></div><div class="badge">{{ today|date:"l, d M Y" }}</div></header>
+<div class="grid">
+<div class="card"><div class="label">Tracked today</div><div class="value">{{ total_label }}</div></div>
+<div class="card"><div class="label">Productive time</div><div class="value">{{ productive_label }}</div></div>
+<div class="card"><div class="label">Social + entertainment</div><div class="value">{{ distracting_label }}</div></div>
+</div>
+<section class="two">
+<div class="card"><h2>Category breakdown</h2>
+{% for row in category_rows %}<div class="row"><span>{{ row.label }}</span><strong>{{ row.duration }}</strong></div>{% empty %}<p class="muted">No activity captured yet. Start the tracker command.</p>{% endfor %}
+</div>
+<div class="card"><h2>Most-used applications</h2>
+{% for row in app_rows %}<div class="row"><span>{{ row.app_name }}</span><strong>{{ row.duration }}</strong></div>{% empty %}<p class="muted">Your app usage will appear here.</p>{% endfor %}
+</div>
+</section>
+<section class="two">
+<div class="card"><h2>Time allocation</h2><p class="note">Productive activity: {{ productive_percent }}%</p><div class="bar"><div class="fill" style="width:{{ productive_percent }}%"></div></div><p class="note">Social and entertainment: {{ distracting_percent }}%</p><div class="bar"><div class="fill" style="width:{{ distracting_percent }}%"></div></div></div>
+<div class="card"><h2>How tracking works</h2><p class="note">The local monitor checks the foreground Windows application at a fixed interval and stores the app name, category, timestamp and estimated duration. It does not record keystrokes, screenshots, page contents or messages.</p><p class="note">Category labels are rule-based and can be customized in <code>tracker/services.py</code>.</p></div>
+</section>
+</main></body></html>
